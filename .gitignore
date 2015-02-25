@@ -1,0 +1,325 @@
+import sqlite3
+from datetime import datetime, date, time
+st.update_purpose_Laptop('для дома', 4)
+st.update_purpose_Laptop('для офиса', 5)
+result = st.selectAll()
+print('_______________________________________________________________________________________________________________')
+print ('|', 'id|'.rjust(2),'Maker|'.rjust(7),'Operating System|'.rjust(16), 'Model|'.rjust(17), 'Hard Drive|'.rjust(10), 'Length|'.rjust(6), 'Depth|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8), 'Purpose|'.rjust(10));
+k = 0
+for i in result:
+print('---------------------------------------------------------------------------------------------------------------')
+for j in i:
+if k == 0: print ('|', str(j).rjust(2), end="")
+else:
+if k == 1: print ('|', str(j).rjust(6), end="")
+else:
+if k==2:print ('|', str(j).rjust(16), end="")
+else:
+if k==3:print ('|', str(j).rjust(16), end="")
+else:
+if k==4:print ('|', str(j).rjust(10), end="")
+else:
+if k==5:print ('|', str(j).rjust(6), end="")
+else:
+if k==6:print ('|', str(j).rjust(5), end="")
+else:
+if k== 7:print ('|', str(j).rjust(5), end="")
+else:
+if k== 8:print ('|', str(j).rjust(6), end="")
+else:
+if k== 9:print ('|', str(j).rjust(7), end="")
+else:
+if k==10:print ('|', str(j).rjust(9), end="")
+if k < 10:
+k+=1
+
+else:
+k = 0
+print('|')
+print('______________________________________________________________________________________________________________')
+st.remove_column()
+result = st.selectAll()
+print('____________________________________________________________________________________________________')
+print ('|', 'id|'.rjust(2),'Maker|'.rjust(7),'Operating System|'.rjust(16), 'Model|'.rjust(17), 'Hard Drive|'.rjust(10), 'Length|'.rjust(6), 'Depth|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8));
+k = 0
+for i in result:
+print('----------------------------------------------------------------------------------------------------')
+for j in i:
+if k == 0: print ('|', str(j).rjust(2), end="")
+else:
+if k == 1: print ('|', str(j).rjust(6), end="")
+else:
+if k==2:print ('|', str(j).rjust(16), end="")
+else:
+if k==3:print ('|', str(j).rjust(16), end="")
+else:
+if k==4:print ('|', str(j).rjust(10), end="")
+else:
+if k==5:print ('|', str(j).rjust(6), end="")
+else:
+if k==6:print ('|', str(j).rjust(5), end="")
+else:
+if k== 7:print ('|', str(j).rjust(5), end="")
+else:
+if k== 8:print ('|', str(j).rjust(6), end="")
+else:
+if k== 9:print ('|', str(j).rjust(7), end="")
+if k < 9:
+k+=1
+
+else:
+k = 0
+print('|')
+print('____________________________________________________________________________________________________')
+
+if __name__ == '__main__': main()
+class storage(object):
+    def __init__(self, path):
+        self.connection = sqlite3.connect(path)
+        self.cursor = self.connection.cursor()
+
+    def createTable(self):
+        self.cursor.execute('''CREATE TABLE VEGETABLES(id INTEGER PRIMARY KEY, Country TEXT, name TEXT, type TEXT, color INTEGER, taste INTEGER, popularity INTEGER, WIDTH INTEGER, Weight REAL, Price REAL)''')
+        self.connection.commit()
+
+    def addvegetable(self, Country, name, type, color, taste, popularity, Width , Weight, Price):
+        self.cursor.execute('''INSERT INTO VEGETABLES (Country, name, type, color, taste, popularity, Width , Weight, Price)VALUES (?,?,?,?,?,?,?,?,?)''', (Country, name, type, color, taste, popularity, Width , Weight, Price))
+        self.connection.commit()
+    def selectAll(self):
+        self.cursor.execute('SELECT * FROM VEGETABLES')
+        res = self.cursor.fetchall()
+        return res
+    def update_price_vegetable(self, newprice, vegetable_id):
+        self.cursor.execute('''UPDATE VEGETABLES SET Price = ? WHERE id = ?''',(newprice,vegetable_id))
+        self.connection.commit()
+    def update_purpose_vegetable(self, newpurpose, vegetable_id):
+        self.cursor.execute('''UPDATE VEGETABLES SET Purpose = ? WHERE id = ?''',(newpurpose,vegetable_id))
+        self.connection.commit()
+    def deletevegetable(self, vegetable_id):
+        self.cursor.execute('''DELETE FROM VEGETABLES WHERE id = ?''',(vegetable_id,))
+        self.connection.commit()
+    def add_column(self):
+        self.cursor.execute('''ALTER TABLE VEGETABLES ADD Purpose CHAR [20]''')
+        self.connection.commit()
+    def remove_column(self):
+        self.cursor.execute('''CREATE TABLE new_vegetables
+    (id INTEGER PRIMARY KEY, Country TEXT, name TEXT, type TEXT, color INTEGER, taste INTEGER, popularity INTEGER, Width INTEGER, Weight REAL, Price REAL)''')
+        self.cursor.execute('''INSERT INTO new_vegetables (Country, name, type, color, taste, popularity, Width , Weight, Price)
+SELECT Country, name, type, color, taste, popularity, Width , Weight, Price FROM VEGETABLES''')
+        self.cursor.execute('''DROP TABLE VEGETABLES''')
+        self.cursor.execute('''CREATE TABLE VEGETABLES
+(id INTEGER PRIMARY KEY, Country TEXT, name TEXT, type TEXT, color INTEGER, taste INTEGER, popularity INTEGER, WIDTH INTEGER, Weight REAL, Price REAL)''')
+        self.cursor.execute('''INSERT INTO VEGETABLES (Country, name, type, color, taste, popularity, Width , Weight, Price)
+SELECT Country, name, type, color, taste, popularity, Width , Weight, Price FROM new_vegetables''')
+        self.cursor.execute('''DROP TABLE new_vegetables''')
+        self.connection.commit()
+
+def main():
+    st = storage(':memory:')
+    st.createTable()
+    st.addvegetable('Apple','China','A','red','sweet',40,56,4, 50)
+    st.addvegetable('banana', 'China', 'F', 'yellow','sweet',7, 56, 215,55)
+    st.addvegetable('tomato', 'China', 'G', 'red','sweet', 39,269, 27, 10)
+    st.addvegetable('pepper', 'Russia', 'A34', 'red','sweet', 22,259, 218, 10)
+    st.addvegetable('banana', 'Russia', 'D', 'green','sweet', 32,251, 23, 600)
+    st.addvegetable('Apple', 'Russia', 'T', 'green', 'sweet', 24,262, 24, 20)
+    st.addvegetable('Apple', 'China', 'G7', 'yellow', 'sweet', 37,278, 29, 100)
+    st.addvegetable('pumpkin', 'China', '1D5', 'orange', 'sweet', 28,260, 35,130)
+    st.addvegetable('pepper', 'Japan', 'FG', 'green', 'sweet', 25,259, 22, 176)
+    st.addvegetable('pepper', 'Japan', 'HB', 'green', 'sweet', 28,286, 3, 120)
+    st.addvegetable('potato', 'Russia', 'DT', 'red', 'sweet', 9,177, 117, 100)
+    st.addvegetable('banana', 'Russia', 'XEA', 'green', 'sweet', 30,254, 219, 169)
+    st.addvegetable('banana', 'Russia', 'DF', 'yellow', 'sweet', 22,380, 24, 100)
+    st.addvegetable('tomato', 'China', 'FB', 'yellow', 'sweet',38,250, 24, 300)
+    st.addvegetable('pepper', 'Russia', 'FHJ', 'red', 'sweet', 22,259, 218, 1900)
+    st.addvegetable('pepper', 'China', 'DGHJ', 'green', 'sweet', 30,270, 264, 180)
+    st.addvegetable('pepper', 'Russia', 'DFDFC', 'yellow', 'sweet', 24,255, 229,400)
+    st.addvegetable('banana', 'Russia', 'DFG56', 'blue', 'sweet', 25,457, 380, 22)
+    st.addvegetable('banana', 'Russia', 'FHH', 'red', 380, 16,258, 2.4,19800)
+    st.addvegetable('pepper', 'Russia', 'JG', 'green', 412, 28,269, 3.29,17500)
+    result = st.selectAll()
+    print('____________________________________________________________________________________________________')
+    print ('|', 'id|'.rjust(2),'Country|'.rjust(7),'name|'.rjust(16), 'type|'.rjust(17), 'color|'.rjust(10), 'taste|'.rjust(6), 'popularity|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8));
+    k = 0
+    for i in result:
+        print('----------------------------------------------------------------------------------------------------')
+        for j in i:
+            if k == 0: print ('|', str(j).rjust(2), end="")
+            else:
+                if k == 1: print ('|', str(j).rjust(6), end="")
+                else:
+                    if k==2:print ('|', str(j).rjust(16), end="")
+                    else:
+                        if k==3:print ('|', str(j).rjust(16), end="")
+                        else:
+                            if k==4:print ('|', str(j).rjust(10), end="")
+                            else:
+                                if k==5:print ('|', str(j).rjust(6), end="")
+                                else:
+                                    if k==6:print ('|', str(j).rjust(5), end="")
+                                    else:
+                                        if k== 7:print ('|', str(j).rjust(5), end="")
+                                        else:
+                                            if k== 8:print ('|', str(j).rjust(6), end="")
+                                            else:
+                                                if k== 9:print ('|',
+                                                str(j).rjust(7), end="")
+            if k < 9:
+                k+=1
+
+            else:
+                k = 0
+                print('|')
+    print('____________________________________________________________________________________________________')
+    st.update_price_vegetable(0,3)
+    st.update_price_vegetable(15,4)
+    result = st.selectAll()
+    print('____________________________________________________________________________________________________')
+    print ('|', 'id|'.rjust(2),'Country|'.rjust(7),'name|'.rjust(16), 'type|'.rjust(17), 'color|'.rjust(10), 'taste|'.rjust(6), 'popularity|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8));
+    k = 0
+    for i in result:
+        print('----------------------------------------------------------------------------------------------------')
+        for j in i:
+            if k == 0: print ('|', str(j).rjust(2), end="")
+            else:
+                if k == 1: print ('|', str(j).rjust(6), end="")
+                else:
+                    if k==2:print ('|', str(j).rjust(16), end="")
+                    else:
+                        if k==3:print ('|', str(j).rjust(16), end="")
+                        else:
+                            if k==4:print ('|', str(j).rjust(10), end="")
+                            else:
+                                if k==5:print ('|', str(j).rjust(6), end="")
+                                else:
+                                    if k==6:print ('|', str(j).rjust(5), end="")
+                                    else:
+                                        if k== 7:print ('|', str(j).rjust(5), end="")
+                                        else:
+                                            if k== 8:print ('|', str(j).rjust(6), end="")
+                                            else:
+                                                if k== 9:print ('|',
+                                                str(j).rjust(7), end="")
+        if k < 9:
+            k+=1
+
+        else:
+            k = 0
+    print('|')
+    print('____________________________________________________________________________________________________')
+    st.deletevegetable(1)
+    result = st.selectAll()
+    print('____________________________________________________________________________________________________')
+    print ('|', 'id|'.rjust(2),'Country|'.rjust(7),'name|'.rjust(16), 'type|'.rjust(17), 'color|'.rjust(10), 'taste|'.rjust(6), 'popularity|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8));
+    k = 0
+
+    for i in result:
+        print('----------------------------------------------------------------------------------------------------')
+        for j in i:
+            if k == 0: print ('|', str(j).rjust(2), end="")
+            else:
+                if k == 1: print ('|', str(j).rjust(6), end="")
+                else:
+                    if k==2:print ('|', str(j).rjust(16), end="")
+                    else:
+                        if k==3:print ('|', str(j).rjust(16), end="")
+                        else:
+                            if k==4:print ('|', str(j).rjust(10), end="")
+                            else:
+                                if k==5:print ('|', str(j).rjust(6), end="")
+                                else:
+                                    if k==6:print ('|', str(j).rjust(5), end="")
+                                    else:
+                                        if k== 7:print ('|', str(j).rjust(5), end="")
+                                        else:
+                                            if k== 8:print ('|', str(j).rjust(6), end="")
+                                            else:
+                                                if k== 9:print ('|',
+                                                str(j).rjust(7), end="")
+            if k < 9:
+                k+=1
+
+            else:
+                k = 0
+                print('|')
+    print('____________________________________________________________________________________________________')
+    st.add_column()
+    st.update_purpose_vegetable('для офиса', 1)
+    st.update_purpose_vegetable('для дома', 2)
+    st.update_purpose_vegetable('для офиса', 3)
+    st.update_purpose_vegetable('для дома', 4)
+    st.update_purpose_vegetable('для офиса', 5)
+    result = st.selectAll()
+    print('_______________________________________________________________________________________________________________')
+    print ('|', 'id|'.rjust(2),'Country|'.rjust(7),'name|'.rjust(16), 'type|'.rjust(17), 'color|'.rjust(10), 'taste|'.rjust(6), 'popularity|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8), 'Purpose|'.rjust(10));
+    k = 0
+    for i in result:
+        print('---------------------------------------------------------------------------------------------------------------')
+        for j in i:
+            if k == 0: print ('|', str(j).rjust(2), end="")
+            else:
+                if k == 1: print ('|', str(j).rjust(6), end="")
+                else:
+                    if k==2:print ('|', str(j).rjust(16), end="")
+                    else:
+                        if k==3:print ('|', str(j).rjust(16), end="")
+                        else:
+                            if k==4:print ('|', str(j).rjust(10), end="")
+                            else:
+                                if k==5:print ('|', str(j).rjust(6), end="")
+                                else:
+                                    if k==6:print ('|', str(j).rjust(5), end="")
+                                    else:
+                                        if k== 7:print ('|', str(j).rjust(5), end="")
+                                        else:
+                                            if k== 8:print ('|', str(j).rjust(6), end="")
+                                            else:
+                                                if k== 9:print ('|', str(j).rjust(7), end="")
+                                                else:
+                                                    if k==10:print ('|',
+                                                    str(j).rjust(9), end="")
+        if k < 10:
+            k+=1
+
+        else:
+            k = 0
+            print('|')
+    print('______________________________________________________________________________________________________________')
+    st.remove_column()
+    result = st.selectAll()
+    print('____________________________________________________________________________________________________')
+    print ('|', 'id|'.rjust(2),'Country|'.rjust(7),'name|'.rjust(16), 'type|'.rjust(17), 'color|'.rjust(10), 'taste|'.rjust(6), 'popularity|'.rjust(5), 'Width|'.rjust(5), 'Weight|'.rjust(6), 'Price|'.rjust(8));
+    k = 0
+    for i in result:
+        print('----------------------------------------------------------------------------------------------------')
+        for j in i:
+            if k == 0: print ('|', str(j).rjust(2), end="")
+            else:
+                if k == 1: print ('|', str(j).rjust(6), end="")
+                else:
+                    if k==2:print ('|', str(j).rjust(16), end="")
+                    else:
+                        if k==3:print ('|', str(j).rjust(16), end="")
+                        else:
+                            if k==4:print ('|', str(j).rjust(10), end="")
+                            else:
+                                if k==5:print ('|', str(j).rjust(6), end="")
+                                else:
+                                    if k==6:print ('|', str(j).rjust(5), end="")
+                                    else:
+                                        if k== 7:print ('|', str(j).rjust(5), end="")
+                                        else:
+                                            if k== 8:print ('|', str(j).rjust(6), end="")
+                                            else:
+                                                if k== 9:print ('|',
+                                                str(j).rjust(7), end="")
+        if k < 9:
+            k+=1
+
+        else:
+            k = 0
+            print('|')
+    print('____________________________________________________________________________________________________')
+
+if __name__ == '__main__': main()
+
